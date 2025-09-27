@@ -401,15 +401,37 @@ body {
     margin-bottom: 20px;
 }
 
-.qr-placeholder {
+.product-visual {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 16px;
+    position: relative;
 }
 
-.qr-code {
-    width: 120px;
-    height: 120px;
+.verification-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.badge-icon {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.product-qr {
+    width: 100px;
+    height: 100px;
     background: #f8f9fa;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
@@ -417,29 +439,53 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.qr-code::before {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: repeating-linear-gradient(
-        0deg,
-        #1a1a1a 0px,
-        #1a1a1a 4px,
-        transparent 4px,
-        transparent 8px
-    ),
-    repeating-linear-gradient(
-        90deg,
-        #1a1a1a 0px,
-        #1a1a1a 4px,
-        transparent 4px,
-        transparent 8px
-    );
+.qr-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
     border-radius: 4px;
+    animation: scan 3s ease-in-out infinite;
 }
+
+.security-indicators {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+    animation: indicatorPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes scan {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes indicatorPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
 
 .product-info {
     text-align: center;

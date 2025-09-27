@@ -339,6 +339,8 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         // Initialize all components
         console.log('X Check landing page loaded successfully');
+        
+        
     } catch (error) {
         console.error('Error initializing landing page:', error);
     }
