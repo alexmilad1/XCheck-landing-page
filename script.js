@@ -334,6 +334,104 @@ function safeQuerySelector(selector) {
     }
 }
 
+// Signup Modal Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const signupModal = document.getElementById('signupModal');
+    const signupForm = document.getElementById('signupForm');
+    const closeBtn = document.querySelector('.close');
+    const signupButtons = document.querySelectorAll('a[href="#signup"]');
+    
+    // Redirect to Google Form when signup buttons are clicked
+    signupButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Redirect to Google Form
+            window.open('https://forms.gle/your-form-id-here', '_blank');
+        });
+    });
+    
+    // Close modal when X is clicked
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSignupModal);
+    }
+    
+    // Close modal when clicking outside
+    if (signupModal) {
+        signupModal.addEventListener('click', function(e) {
+            if (e.target === signupModal) {
+                closeSignupModal();
+            }
+        });
+    }
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && signupModal.classList.contains('show')) {
+            closeSignupModal();
+        }
+    });
+    
+    // Handle form submission
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleSignupSubmission(this);
+        });
+    }
+    
+    function openSignupModal() {
+        if (signupModal) {
+            signupModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus on first input
+            const firstInput = signupModal.querySelector('input');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 100);
+            }
+        }
+    }
+    
+    function closeSignupModal() {
+        if (signupModal) {
+            signupModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    function handleSignupSubmission(form) {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        
+        // Get submit button
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        // Show loading state
+        submitButton.textContent = 'Submitting...';
+        submitButton.disabled = true;
+        
+        // Simulate form submission (replace with actual API call)
+        setTimeout(() => {
+            // Reset button
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            
+            // Show success message
+            showNotification('Thank you for your interest! We\'ll be in touch soon.', 'success');
+            
+            // Close modal
+            closeSignupModal();
+            
+            // Reset form
+            form.reset();
+            
+            // Log form data (replace with actual submission)
+            console.log('Signup form submitted:', data);
+        }, 2000);
+    }
+});
+
 // Initialize all functionality safely
 document.addEventListener('DOMContentLoaded', function() {
     try {
