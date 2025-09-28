@@ -117,7 +117,7 @@ window.addEventListener('scroll', function() {
     }, 10);
 });
 
-// Modern Intersection Observer for animations
+// Simple CSS-based animation system
 document.addEventListener('DOMContentLoaded', function() {
     try {
         // Prevent duplicate observers
@@ -129,10 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mobile detection
         const isMobile = window.innerWidth <= 768;
         
-        // Observer options - more sensitive for mobile
+        // Simple observer options
         const observerOptions = {
-            threshold: isMobile ? 0.05 : 0.1,
-            rootMargin: isMobile ? '0px 0px -50px 0px' : '0px 0px -100px 0px'
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
         
         // Track which elements have been animated
@@ -145,14 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Mark element as animated
                     animatedElements.add(entry.target);
                     
-                    // Simple delay to avoid mobile momentum issues
-                    const delay = isMobile ? 200 + (index * 50) : index * 100;
+                    // Simple delay for stagger effect
+                    const delay = isMobile ? index * 100 : index * 150;
                     setTimeout(() => {
-                        // Re-enable transitions for smooth animation
-                        const transitionDuration = isMobile ? '0.6s' : '0.8s';
-                        entry.target.style.transition = `all ${transitionDuration} cubic-bezier(0.4, 0, 0.2, 1)`;
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0) scale(1)';
+                        // Add animation class - CSS handles the rest
                         entry.target.classList.add('animate-in');
                     }, delay);
                     
@@ -165,24 +161,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Observe elements for animation
         const elementsToAnimate = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item');
         elementsToAnimate.forEach(el => {
+            // Set initial state
             el.style.opacity = '0';
-            el.style.transform = 'translateY(50px) scale(0.95)';
-            // Disable CSS transitions to prevent double animation
-            el.style.transition = 'none';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
             observer.observe(el);
-        });
-        
-        // Parallax effect for hero background
-        let parallaxTimeout;
-        window.addEventListener('scroll', function() {
-            clearTimeout(parallaxTimeout);
-            parallaxTimeout = setTimeout(() => {
-                const scrolled = window.pageYOffset;
-                const parallax = document.querySelector('.hero::before');
-                if (parallax) {
-                    parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
-                }
-            }, 10);
         });
         
     } catch (error) {
