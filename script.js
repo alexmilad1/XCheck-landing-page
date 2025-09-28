@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Mark element as animated
                     animatedElements.add(entry.target);
                     
-                    // Stagger animation
-                    const delay = isMobile ? index * 50 : index * 100;
+                    // Simple delay to avoid mobile momentum issues
+                    const delay = isMobile ? 200 + (index * 50) : index * 100;
                     setTimeout(() => {
                         // Re-enable transitions for smooth animation
                         const transitionDuration = isMobile ? '0.6s' : '0.8s';
