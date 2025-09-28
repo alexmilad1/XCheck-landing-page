@@ -120,13 +120,13 @@ window.addEventListener('scroll', function() {
 // Modern Intersection Observer for animations
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Simple mobile detection
+        // Mobile detection
         const isMobile = window.innerWidth <= 768;
         
-        // Observer options
+        // Observer options - more sensitive for mobile
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
+            threshold: isMobile ? 0.05 : 0.1,
+            rootMargin: isMobile ? '0px 0px -50px 0px' : '0px 0px -100px 0px'
         };
         
         // Track which elements have been animated
@@ -139,11 +139,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     animatedElements.add(entry.target);
                     
                     // Stagger animation
+                    const delay = isMobile ? index * 50 : index * 100;
                     setTimeout(() => {
+                        // Re-enable transitions for smooth animation
+                        const transitionDuration = isMobile ? '0.6s' : '0.8s';
+                        entry.target.style.transition = `all ${transitionDuration} cubic-bezier(0.4, 0, 0.2, 1)`;
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0) scale(1)';
                         entry.target.classList.add('animate-in');
-                    }, index * 100);
+                    }, delay);
                     
                     // Unobserve the element after animation
                     observer.unobserve(entry.target);
@@ -156,7 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
         elementsToAnimate.forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(50px) scale(0.95)';
-            el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            // Disable CSS transitions to prevent double animation
+            el.style.transition = 'none';
             observer.observe(el);
         });
         
