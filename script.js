@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach((entry, index) => {
+                // Only animate if element is intersecting and not already animated
                 if (entry.isIntersecting && !animatedElements.has(entry.target)) {
                     // Mark element as animated
                     animatedElements.add(entry.target);
