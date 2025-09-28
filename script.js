@@ -120,6 +120,12 @@ window.addEventListener('scroll', function() {
 // Modern Intersection Observer for animations
 document.addEventListener('DOMContentLoaded', function() {
     try {
+        // Prevent duplicate observers
+        if (window.animationObserverInitialized) {
+            return;
+        }
+        window.animationObserverInitialized = true;
+        
         // Mobile detection
         const isMobile = window.innerWidth <= 768;
         
