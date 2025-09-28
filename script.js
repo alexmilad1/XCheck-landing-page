@@ -100,10 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Navbar scroll effect (mobile-optimized)
+// Navbar scroll effect
 let navbarTimeout;
-const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-
 window.addEventListener('scroll', function() {
     clearTimeout(navbarTimeout);
     navbarTimeout = setTimeout(() => {
@@ -116,105 +114,68 @@ window.addEventListener('scroll', function() {
             navbar.style.background = 'rgba(255, 255, 255, 0.95)';
             navbar.style.boxShadow = 'none';
         }
-    }, isMobileDevice ? 16 : 10);
-}, { passive: true });
+    }, 10);
+});
 
 // Modern Intersection Observer for animations
 document.addEventListener('DOMContentLoaded', function() {
-    // Detect mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
-    // Mobile-optimized observer options
-    const observerOptions = {
-        threshold: isMobile ? 0.05 : 0.1, // Lower threshold for mobile
-        rootMargin: isMobile ? '0px 0px -50px 0px' : '0px 0px -100px 0px' // Smaller margin for mobile
-    };
-    
-    // Track which elements have been animated to prevent re-triggering
-    const animatedElements = new Set();
-    let isScrolling = false;
-    let scrollTimeout;
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting && !animatedElements.has(entry.target) && !isScrolling) {
-                // Mark element as animated
-                animatedElements.add(entry.target);
-                
-                // Stagger animation for multiple elements (shorter delay on mobile)
-                const delay = isMobile ? index * 50 : index * 100;
-                setTimeout(() => {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0) scale(1)';
-                    entry.target.classList.add('animate-in');
-                }, delay);
-                
-                // Unobserve the element after animation to prevent re-triggering
-                observer.unobserve(entry.target);
-            }
+    try {
+        // Simple mobile detection
+        const isMobile = window.innerWidth <= 768;
+        
+        // Observer options
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        // Track which elements have been animated
+        const animatedElements = new Set();
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting && !animatedElements.has(entry.target)) {
+                    // Mark element as animated
+                    animatedElements.add(entry.target);
+                    
+                    // Stagger animation
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0) scale(1)';
+                        entry.target.classList.add('animate-in');
+                    }, index * 100);
+                    
+                    // Unobserve the element after animation
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements for animation
+        const elementsToAnimate = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item');
+        elementsToAnimate.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px) scale(0.95)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(el);
         });
-    }, observerOptions);
-    
-    // Observe elements for animation
-    const elementsToAnimate = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item');
-    elementsToAnimate.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(50px) scale(0.95)';
-        el.style.transition = isMobile ? 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' : 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-        observer.observe(el);
-    });
-    
-    // Mobile-optimized scroll handling
-    function handleScroll() {
-        isScrolling = true;
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            isScrolling = false;
-        }, isMobile ? 150 : 100);
-    }
-    
-    // Use passive listeners for better mobile performance
-    const scrollOptions = { passive: true };
-    window.addEventListener('scroll', handleScroll, scrollOptions);
-    
-    // Mobile touch event handling to prevent animation glitches
-    if (isMobile) {
-        let touchStartY = 0;
-        let touchEndY = 0;
         
-        document.addEventListener('touchstart', function(e) {
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
+        // Parallax effect for hero background
+        let parallaxTimeout;
+        window.addEventListener('scroll', function() {
+            clearTimeout(parallaxTimeout);
+            parallaxTimeout = setTimeout(() => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.hero::before');
+                if (parallax) {
+                    parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+                }
+            }, 10);
+        });
         
-        document.addEventListener('touchend', function(e) {
-            touchEndY = e.changedTouches[0].clientY;
-            const touchDiff = Math.abs(touchStartY - touchEndY);
-            
-            // If significant touch movement, delay animations
-            if (touchDiff > 10) {
-                isScrolling = true;
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    isScrolling = false;
-                }, 200);
-            }
-        }, { passive: true });
+    } catch (error) {
+        console.error('Animation initialization error:', error);
     }
-    
-    // Parallax effect for hero background (mobile-optimized)
-    let parallaxTimeout;
-    window.addEventListener('scroll', function() {
-        clearTimeout(parallaxTimeout);
-        parallaxTimeout = setTimeout(() => {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.hero::before');
-            if (parallax) {
-                // Reduce parallax intensity on mobile
-                const intensity = isMobile ? 0.3 : 0.5;
-                parallax.style.transform = `translateY(${scrolled * intensity}px)`;
-            }
-        }, isMobile ? 16 : 10);
-    }, scrollOptions);
 });
 
 // Form handling (if forms are added later)
