@@ -100,17 +100,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Navbar scroll effect
+// Navbar scroll effect (debounced for performance)
+let navbarTimeout;
 window.addEventListener('scroll', function() {
-    const navbar = document.querySelector('.navbar');
-    
-    if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
-    }
+    clearTimeout(navbarTimeout);
+    navbarTimeout = setTimeout(() => {
+        const navbar = document.querySelector('.navbar');
+        
+        if (window.scrollY > 50) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = 'none';
+        }
+    }, 10);
 });
 
 // Modern Intersection Observer for animations
@@ -120,35 +124,48 @@ document.addEventListener('DOMContentLoaded', function() {
         rootMargin: '0px 0px -100px 0px'
     };
     
+    // Track which elements have been animated to prevent re-triggering
+    const animatedElements = new Set();
+    
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && !animatedElements.has(entry.target)) {
+                // Mark element as animated
+                animatedElements.add(entry.target);
+                
                 // Stagger animation for multiple elements
                 setTimeout(() => {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0) scale(1)';
                     entry.target.classList.add('animate-in');
                 }, index * 100);
+                
+                // Unobserve the element after animation to prevent re-triggering
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
     
     // Observe elements for animation
-    const animatedElements = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item');
-    animatedElements.forEach(el => {
+    const elementsToAnimate = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item');
+    elementsToAnimate.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(50px) scale(0.95)';
         el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
         observer.observe(el);
     });
     
-    // Parallax effect for hero background
+    // Parallax effect for hero background (debounced for performance)
+    let parallaxTimeout;
     window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const parallax = document.querySelector('.hero::before');
-        if (parallax) {
-            parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
-        }
+        clearTimeout(parallaxTimeout);
+        parallaxTimeout = setTimeout(() => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero::before');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        }, 10);
     });
 });
 
@@ -273,7 +290,8 @@ function debounce(func, wait) {
 // Apply debouncing to scroll events
 const debouncedScrollHandler = debounce(function() {
     // Scroll-based animations or effects can be added here
-}, 10);
+    // This is now handled by the optimized navbar and parallax handlers above
+}, 16);
 
 window.addEventListener('scroll', debouncedScrollHandler);
 

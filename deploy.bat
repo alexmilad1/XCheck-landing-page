@@ -44,3 +44,4 @@ echo Your site will be live at:
 echo https://alexmilad1.github.io/XCheck-landing-page/
 echo.
 pause
+

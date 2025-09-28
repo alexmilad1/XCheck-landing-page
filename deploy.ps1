@@ -43,3 +43,4 @@ Write-Host "Your site will be live at:" -ForegroundColor Green
 Write-Host "https://alexmilad1.github.io/XCheck-landing-page/" -ForegroundColor Green
 Write-Host ""
 Read-Host "Press Enter to continue"
+

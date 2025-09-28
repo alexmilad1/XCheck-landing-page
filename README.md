@@ -65,3 +65,4 @@ The landing page is designed to be easily customizable:
 ## License
 
 This landing page is created for the X Check Trust Chain project.
+
