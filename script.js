@@ -332,14 +332,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const signupModal = document.getElementById('signupModal');
     const signupForm = document.getElementById('signupForm');
     const closeBtn = document.querySelector('.close');
-    const signupButtons = document.querySelectorAll('a[href="#signup"]');
+    const signupButtons = document.querySelectorAll('a[href="#signup"], a[href="#get-started"]');
     
     // Redirect to Google Form when signup buttons are clicked
     signupButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             // Redirect to Google Form
-            window.open('https://forms.gle/your-form-id-here', '_blank');
+            window.open('https://docs.google.com/forms/d/e/1FAIpQLSfAgB1HVWoVZBPe80EK7RPlZJduA3JxJPFfpdqyWtSJcKyQuw/viewform?usp=header', '_blank');
         });
     });
     
