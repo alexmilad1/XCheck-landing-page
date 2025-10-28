@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alexmilad1.github.io/XCheck-landing-page/sitemap.xml
+
