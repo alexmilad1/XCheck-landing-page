@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, observerOptions);
         
         // Observe elements for animation
-        const elementsToAnimate = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item');
+        const elementsToAnimate = document.querySelectorAll('.feature-card, .step, .testimonial-card, .benefit-item, .ownership-card, .brand-card, .rarity-card, .ecosystem-card');
         elementsToAnimate.forEach(el => {
             // Set initial state
             el.style.opacity = '0';
